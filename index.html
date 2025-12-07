@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relaciones de movimiento del Sol, la Tierra y la Luna - Enseñanza interactiva 3D de Ciencias de Primaria</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <!-- Se han eliminado las dependencias de FontLoader y TextGeometry porque no se utilizan actualmente -->
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Relaciones de movimiento del Sol, la Tierra y la Luna</h1>
+            <p>Enseñanza interactiva de ciencias para tercer grado</p>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="content-wrapper">
+                <div class="sidebar">
+                    <div class="control-panel">
+                        <h2>Panel de control interactivo</h2>
+                        <div class="control-group">
+                            <h3>Selección de vista</h3>
+                            <button id="sun-view" class="view-btn active" aria-label="Seleccionar vista solar">Vista del Sol</button>
+                            <button id="earth-view" class="view-btn" aria-label="Seleccionar vista de la Tierra">Vista de la Tierra</button>
+                            <button id="moon-view" class="view-btn" aria-label="Seleccionar vista de la Luna">Vista de la Luna</button>
+                            <button id="space-view" class="view-btn" aria-label="Seleccionar vista del espacio">Vista del espacio</button>
+                        </div>
+                        
+                        <div class="control-group">
+                            <h3>Control de movimiento</h3>
+                            <div class="slider-container">
+                                <label for="speed-control">Velocidad del movimiento:</label>
+                                <input type="range" id="speed-control" min="0.1" max="5" step="0.1" value="1" aria-label="Control de velocidad del movimiento">
+                                <span id="speed-value">1x</span>
+                            </div>
+
+                            <!-- Control para ajustar la inclinación del eje terrestre -->
+                            <div class="slider-container">
+                                <label for="tilt-control">Inclinación del eje terrestre (°):</label>
+                                <input type="range" id="tilt-control" min="0" max="45" step="1" value="23" aria-label="Control de inclinación del eje terrestre">
+                                <span id="tilt-value">23°</span>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="show-orbit" checked aria-label="Mostrar u ocultar las órbitas">
+                                <label for="show-orbit">Mostrar órbita</label>
+                            </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="show-names" checked aria-label="Mostrar u ocultar los nombres de los cuerpos celestes">
+                                <label for="show-names">Mostrar nombres</label>
+                            </div>
+                            <button id="play-pause" class="control-btn" aria-label="Reproducir o pausar la animación">Pausa</button>
+                            <button id="reset" class="control-btn" aria-label="Restablecer la escena">Restablecer</button>
+                        </div>
+                        
+                        <div class="control-group">
+                            <h3>Fenómenos celestes</h3>
+                            <button id="show-day-night" class="phenomenon-btn" aria-label="Demostrar el ciclo día-noche">Cambio día/noche</button>
+                            <button id="show-seasons" class="phenomenon-btn" aria-label="Demostrar el ciclo de las estaciones">Cambio de estaciones</button>
+                            <button id="show-moon-phases" class="phenomenon-btn" aria-label="Demostrar el ciclo de fases lunares">Cambio de fases lunares</button>
+                        </div>
+                    </div>
+                    
+                    <div class="info-panel">
+                        <h2>Panel de información</h2>
+                        <div id="info-content">
+                            <p>Bienvenido/a a la enseñanza interactiva 3D del Sol, la Tierra y la Luna. Seleccioná las funciones en el panel de control a la derecha para explorar los misterios de estos cuerpos celestes.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="model-container" id="solar-system" role="img" aria-label="Simulación 3D del sistema solar">
+                    <!-- El modelo 3D se renderizará aquí -->
+                </div>
+            </div>
+            
+            <div class="lessons-section">
+                <h2>Contenido de la lección</h2>
+                <div class="lesson-tabs">
+                    <button class="lesson-tab active" data-tab="lesson1">Conocimiento básico del Sol, la Tierra y la Luna</button>
+                    <button class="lesson-tab" data-tab="lesson2">Movimiento de la Tierra</button>
+                    <button class="lesson-tab" data-tab="lesson3">Movimiento de la Luna</button>
+                    <button class="lesson-tab" data-tab="lesson4">Cambio de fases lunares</button>
+                </div>
+                
+                <div class="lesson-content active" id="lesson1">
+                    <h3>Conocimiento básico del Sol, la Tierra y la Luna</h3>
+                    <div class="lesson-grid">
+                        <div class="lesson-item">
+                            <h4>Sol</h4>
+                            <img src="images/sun.jpg" alt="Sol">
+                            <ul>
+                                <li>El Sol es una estrella que emite luz y calor</li>
+                                <li>El Sol es el centro del sistema solar</li>
+                                <li>El Sol es la principal fuente de energía de la Tierra</li>
+                                <li>El diámetro del Sol es aproximadamente 109 veces el de la Tierra</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="lesson-item">
+                            <h4>Tierra</h4>
+                            <img src="images/earth.jpg" alt="Tierra">
+                            <ul>
+                                <li>La Tierra es un planeta del sistema solar</li>
+                                <li>La superficie de la Tierra tiene continentes, océanos y una atmósfera</li>
+                                <li>La Tierra es el hogar de la humanidad</li>
+                                <li>El diámetro de la Tierra es de aproximadamente 12&nbsp;742&nbsp;kilómetros</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="lesson-item">
+                            <h4>Luna</h4>
+                            <img src="images/moon.jpg" alt="Luna">
+                            <ul>
+                                <li>La Luna es el único satélite natural de la Tierra</li>
+                                <li>El diámetro de la Luna es aproximadamente un cuarto del de la Tierra</li>
+                                <li>La Luna no tiene atmósfera</li>
+                                <li>La superficie de la Luna está cubierta de cráteres de impacto</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lesson-content" id="lesson2">
+                    <h3>Movimiento de la Tierra</h3>
+                    <div class="lesson-flex">
+                        <div class="lesson-col">
+                            <h4>Rotación de la Tierra</h4>
+                            <img src="images/earth-rotation.jpg" alt="Rotación de la Tierra">
+                            <p>La Tierra gira de oeste a este alrededor de su propio eje; este movimiento se denomina rotación. La Tierra tarda aproximadamente 24&nbsp;horas en completar una vuelta, es decir, un día. La rotación de la Tierra provoca la alternancia de día y noche.</p>
+                        </div>
+                        <div class="lesson-col">
+                            <h4>Traslación de la Tierra</h4>
+                            <img src="images/earth-revolution.jpg" alt="Traslación de la Tierra">
+                            <p>El movimiento de la Tierra alrededor del Sol se llama traslación. La Tierra tarda aproximadamente 365&nbsp;días, es decir, un año, en completar una órbita. Su trayectoria es elíptica. La traslación de la Tierra, junto con la inclinación de su eje, produce el cambio de estaciones.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lesson-content" id="lesson3">
+                    <h3>Movimiento de la Luna</h3>
+                    <div class="lesson-flex">
+                        <div class="lesson-col">
+                            <h4>Rotación de la Luna</h4>
+                            <img src="images/moon-rotation.jpg" alt="Rotación de la Luna">
+                            <p>La Luna también gira sobre sí misma. Una rotación completa dura aproximadamente 27,3&nbsp;días. El periodo de rotación de la Luna es igual al de su traslación, por lo que siempre presenta la misma cara hacia la Tierra; a este fenómeno se le llama “rotación síncrona”.</p>
+                        </div>
+                        <div class="lesson-col">
+                            <h4>Traslación de la Luna</h4>
+                            <img src="images/moon-revolution.jpg" alt="Traslación de la Luna">
+                            <p>El movimiento de la Luna alrededor de la Tierra se llama traslación. La Luna tarda aproximadamente 27,3&nbsp;días en completar una órbita elíptica alrededor de la Tierra. Esta traslación provoca los cambios de fase lunar.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lesson-content" id="lesson4">
+                    <h3>Cambio de fases lunares</h3>
+                    <img src="images/moon-phases.jpg" alt="Cambio de fases de la Luna" class="full-width-img">
+                    <div class="lesson-text">
+                        <p>Las fases lunares se refieren a la forma de la porción iluminada de la Luna vista desde la Tierra. Las fases principales son: luna nueva, cuarto creciente, luna llena y cuarto menguante.</p>
+                        <p>El cambio de fase se debe a las variaciones en la posición relativa del Sol, la Tierra y la Luna:</p>
+                        <ul>
+                            <li>Cuando la Luna está entre el Sol y la Tierra, es luna nueva</li>
+                            <li>Cuando la Luna está en el lado opuesto de la Tierra respecto al Sol, es luna llena</li>
+                            <li>Cuando la Luna se encuentra en dirección perpendicular a la línea Sol‑Tierra, es cuarto creciente o cuarto menguante</li>
+                        </ul>
+                        <p>Un ciclo completo de fases lunares dura aproximadamente 29,5&nbsp;días, es decir, un mes sinódico.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de recursos complementarios -->
+            <div class="resources-section">
+                <h2>Recursos complementarios</h2>
+                <ul>
+                    <li><a href="https://spaceplace.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Space Place</a>: recursos interactivos sobre el sistema solar para chicos y chicas.</li>
+                    <li><a href="https://solarsystem.nasa.gov/planets/overview/" target="_blank" rel="noopener noreferrer">NASA – Planetas</a>: información detallada sobre los planetas y sus satélites.</li>
+                    <li><a href="https://www.youtube.com/user/NASAeducation" target="_blank" rel="noopener noreferrer">Canal de educación de la NASA en YouTube</a>: videos educativos sobre astronomía y exploración espacial.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Curso de ciencias de tercer grado de primaria – Relaciones de movimiento del Sol, la Tierra y la Luna</p>
+            <p>Material realizado por Lucas Pujadas – Educación Informática – 2025</p>
+        </div>
+    </footer>
+    
+    <script src="js/app.js"></script>
+
+    </body>
+</html>
